@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>AJAX Concept</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.TextBox("txtN",0)
+    <button id="btnCalculate">Calcular</button><br />
+
+    <div id="lblMessage"></div>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        //estasmo capturando cualquier evento en el formulario
+        $(function () {
+            //selector
+            $("#btnCalculate").on("click", function () {
+                //llamado ajax
+                $.ajax({
+                    // se coloca los parametros de ajax
+                    type: "POST", // tipo de llamada
+                    url: '@Url.Action("JsonFactorial")',
+                    data: {
+                        n: $('#txtN').val() //n -> parametro de entrada de la funcion JsonFactorial
+                    },
+                    datatype: 'json', // tipo de dato. Formato json
+                    cache: false, // sigue antiguo en el siguiente llamado
+					
+                })
+                    .done(function (data) {
+						//alert( "success" );
+                        $("#lblMessage").html(data.Factorial);
+                        console.log("Done!");
+                    })
+                    .fail(function (xhr, ajaxOptions, thrownError) {
+						//alert( "error" );
+                        $("#lblMessage").html("An error was occured");
+                        console.log("No se ha podido obtener la información");
+                    })
+                    .always(function () {
+                        //alert("complete");
+                        console.log("Always!");
+                    });
+                return false;
+            });
+            
+        });        
+    </script>
+}
